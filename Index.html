@@ -3,39 +3,62 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mentor Moose — Demo Swipe</title>
-  <link rel="stylesheet" href="styles.css">
+  <title>Mentor Moose | Student Tutor Marketplace Demo</title>
+  <meta name="description" content="Mentor Moose is a student-to-student tutor marketplace demo built for GitHub Pages." />
+  <link rel="stylesheet" href="Styles.css" />
 </head>
 <body>
-  <main>
-    <header>
-      <h1>Mentor Moose (Demo)</h1>
+  <main class="app-shell">
+    <header class="hero">
+      <p class="badge">GitHub Pages Demo</p>
+      <h1>Mentor Moose</h1>
+      <p class="subhead">A student-to-student tutor marketplace where students can teach and learn from each other.</p>
+      <div class="hero-actions">
+        <button id="browseTutorsBtn" class="btn btn-primary">Browse Tutors</button>
+        <button id="becomeTutorBtn" class="btn btn-secondary">Become a Tutor</button>
+      </div>
     </header>
 
-    <section class="role-wrap" id="roleWrap">
-      <h2>Choose your role</h2>
-      <div class="role-buttons">
-        <button id="asMentor">I'm a Mentor</button>
-        <button id="asMentee">I'm a Mentee</button>
+    <section id="marketplaceSection" class="card-section">
+      <div class="section-header">
+        <h2>Find a Student Tutor</h2>
+        <div class="filters">
+          <label for="subjectFilter">Subject</label>
+          <select id="subjectFilter">
+            <option value="all">All subjects</option>
+          </select>
+          <label for="levelFilter">Level</label>
+          <select id="levelFilter">
+            <option value="all">All levels</option>
+          </select>
+        </div>
       </div>
+
+      <div id="tutorGrid" class="tutor-grid" aria-live="polite"></div>
+      <p id="emptyState" class="empty hidden">No tutors match these filters yet.</p>
     </section>
 
-    <section id="demoArea" class="hidden">
-      <div id="cardContainer" class="card-container"></div>
-
-      <div class="controls">
-        <button id="nopeBtn" class="nope">Nope</button>
-        <button id="likeBtn" class="like">Like</button>
-      </div>
-
-      <div id="emptyState" class="empty hidden">
-        <p>No more profiles — reload to see again.</p>
-        <button id="backBtn">Back</button>
-      </div>
+    <section id="requestSection" class="card-section">
+      <h2>Request a Session</h2>
+      <form id="requestForm" class="request-form">
+        <label>
+          Your name
+          <input id="studentName" name="studentName" required placeholder="e.g., Jordan" />
+        </label>
+        <label>
+          Subject
+          <input id="requestSubject" name="requestSubject" required placeholder="e.g., Algebra II" />
+        </label>
+        <label>
+          Learning goal
+          <textarea id="learningGoal" name="learningGoal" rows="3" required placeholder="What do you want help with?"></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit">Submit Request</button>
+      </form>
+      <p id="requestMessage" class="request-message hidden" role="status"></p>
     </section>
-
   </main>
 
-  <script src="app.js"></script>
+  <script src="App.js"></script>
 </body>
 </html>

@@ -1,94 +1,185 @@
-:root{
-  --bg:#f5f7fb;
-  --card-bg:#ffffff;
-  --accent:#2b8aef;
-  --green:#2ecc71;
-  --red:#ff4d4f;
-  --width:340px;
-  --height:520px;
+:root {
+  --bg: #f3f6fb;
+  --surface: #ffffff;
+  --text: #1e2430;
+  --muted: #637084;
+  --primary: #2b8aef;
+  --primary-dark: #1d6ac2;
+  --accent: #15a37d;
+  --border: #dde4ef;
 }
 
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Inter, system-ui, Arial, sans-serif;
-  background:var(--bg);
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+* {
+  box-sizing: border-box;
 }
 
-main{
-  width:100%;
-  max-width:980px;
-  padding:28px;
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--text);
+  background: linear-gradient(180deg, #edf3ff 0%, var(--bg) 35%, #f8faff 100%);
 }
 
-header h1{margin:0 0 18px 0; font-size:22px; text-align:center}
-
-.role-wrap{background:var(--card-bg); padding:22px; border-radius:12px; text-align:center; box-shadow:0 8px 24px rgba(20,30,50,0.06)}
-.role-buttons{display:flex; gap:12px; justify-content:center; margin-top:14px}
-.role-buttons button{
-  padding:10px 14px; border-radius:10px; border:0; cursor:pointer; font-weight:600;
-  background:var(--accent); color:#fff;
-}
-.role-buttons button:nth-child(2){ background:#444; }
-
-.hidden{display:none}
-
-/* Card stack area */
-.card-container{
-  width:var(--width);
-  height:var(--height);
-  margin:26px auto;
-  position:relative;
-  touch-action:none;
-  -webkit-tap-highlight-color: transparent;
+.app-shell {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 28px 18px 48px;
 }
 
-/* card */
-.card{
-  position:absolute;
-  width:100%;
-  height:100%;
-  border-radius:14px;
-  background:var(--card-bg);
-  box-shadow:0 12px 30px rgba(20,30,50,0.12);
-  overflow:hidden;
-  display:flex;
-  flex-direction:column;
-  transition:transform 220ms ease, opacity 220ms ease;
-  will-change:transform;
-  user-select:none;
-  cursor:grab;
+.hero {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 24px;
+  box-shadow: 0 16px 30px rgba(28, 58, 112, 0.08);
 }
 
-.card:active{ cursor:grabbing; }
-
-.card img{
-  width:100%;
-  height:60%;
-  object-fit:cover;
-  display:block;
+.badge {
+  margin: 0;
+  display: inline-block;
+  background: #ecf4ff;
+  color: var(--primary-dark);
+  font-size: 0.82rem;
+  font-weight: 700;
+  border-radius: 999px;
+  padding: 6px 10px;
 }
 
-.card .info{
-  padding:14px;
-  flex:1;
+h1 {
+  margin: 12px 0 8px;
+  font-size: clamp(1.8rem, 2vw, 2.3rem);
 }
 
-.card .name { font-size:20px; margin:0 0 6px 0; font-weight:700 }
-.card .role { margin:0;color:#666; font-size:14px }
-
-/* controls */
-.controls{ display:flex; gap:18px; justify-content:center; margin-top:8px}
-.controls button{
-  padding:10px 16px; border-radius:10px; border:0; font-weight:700; cursor:pointer;
+.subhead {
+  margin: 0;
+  color: var(--muted);
+  max-width: 760px;
 }
-.controls .nope{ background:var(--red); color:white }
-.controls .like{ background:var(--green); color:white }
 
-/* empty */
-.empty{ text-align:center; margin-top:10px; }
-.empty p{ color:#333; margin-bottom:12px }
+.hero-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.card-section {
+  margin-top: 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 20px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: end;
+}
+
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+label {
+  font-weight: 600;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 10px;
+}
+
+select,
+input,
+textarea {
+  width: 100%;
+  margin-top: 6px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px;
+  font: inherit;
+  color: var(--text);
+  background: #fff;
+}
+
+.tutor-grid {
+  margin-top: 16px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+
+.tutor-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  background: #fcfdff;
+}
+
+.tutor-card h3 {
+  margin: 0 0 8px;
+}
+
+.meta {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+
+.tutor-card p {
+  margin: 6px 0;
+}
+
+.request-form {
+  max-width: 560px;
+}
+
+.request-message {
+  margin-top: 10px;
+  background: #eaf8f4;
+  color: #145f4b;
+  border: 1px solid #bbe8da;
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.empty {
+  color: var(--muted);
+}
+
+.btn {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font: inherit;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  background: #e7eef9;
+  color: #243a5f;
+}
+
+.btn-small {
+  margin-top: 8px;
+  background: var(--accent);
+  color: #fff;
+}
+
+.hidden {
+  display: none;
+}
