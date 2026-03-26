@@ -1,161 +1,142 @@
-/* Demo data */
-const demoMentors = [
-  { id: 'm1', name: "Sarah Johnson", role: "Business Mentor", img: "https://picsum.photos/640/480?random=1" },
-  { id: 'm2', name: "Kevin Lee", role: "Software Mentor", img: "https://picsum.photos/640/480?random=2" },
-  { id: 'm3', name: "Rita Gomez", role: "Design Mentor", img: "https://picsum.photos/640/480?random=3" }
+const tutors = [
+  {
+    id: 't1',
+    name: 'Avery Kim',
+    school: 'Northview High',
+    subject: 'Math',
+    level: 'High School',
+    rate: 20,
+    blurb: 'Helps with Algebra, Geometry, and SAT math strategies.',
+  },
+  {
+    id: 't2',
+    name: 'Mateo Rivera',
+    school: 'Westfield College',
+    subject: 'Computer Science',
+    level: 'College',
+    rate: 24,
+    blurb: 'Covers Python basics, debugging, and intro data structures.',
+  },
+  {
+    id: 't3',
+    name: 'Priya Patel',
+    school: 'Eastwood High',
+    subject: 'Chemistry',
+    level: 'High School',
+    rate: 18,
+    blurb: 'Great for balancing equations and exam prep review sessions.',
+  },
+  {
+    id: 't4',
+    name: 'Noah Johnson',
+    school: 'Lakeview University',
+    subject: 'Writing',
+    level: 'College',
+    rate: 22,
+    blurb: 'Supports essay structure, thesis development, and editing.',
+  },
+  {
+    id: 't5',
+    name: 'Elena Garcia',
+    school: 'Central High',
+    subject: 'Spanish',
+    level: 'Middle School',
+    rate: 16,
+    blurb: 'Conversation practice and vocabulary games for beginners.',
+  }
 ];
 
-const demoMentees = [
-  { id: 'e1', name: "Alex Rivera", role: "Business Student", img: "https://picsum.photos/640/480?random=4" },
-  { id: 'e2', name: "Amanda Chen", role: "Web Dev Student", img: "https://picsum.photos/640/480?random=5" },
-  { id: 'e3', name: "Jordan Smith", role: "UX Student", img: "https://picsum.photos/640/480?random=6" }
-];
-
-/* elements */
-const roleWrap = document.getElementById('roleWrap');
-const asMentorBtn = document.getElementById('asMentor');
-const asMenteeBtn = document.getElementById('asMentee');
-const demoArea = document.getElementById('demoArea');
-const cardContainer = document.getElementById('cardContainer');
-const nopeBtn = document.getElementById('nopeBtn');
-const likeBtn = document.getElementById('likeBtn');
+const tutorGrid = document.getElementById('tutorGrid');
+const subjectFilter = document.getElementById('subjectFilter');
+const levelFilter = document.getElementById('levelFilter');
 const emptyState = document.getElementById('emptyState');
-const backBtn = document.getElementById('backBtn');
+const browseTutorsBtn = document.getElementById('browseTutorsBtn');
+const becomeTutorBtn = document.getElementById('becomeTutorBtn');
+const marketplaceSection = document.getElementById('marketplaceSection');
+const requestSection = document.getElementById('requestSection');
+const requestForm = document.getElementById('requestForm');
+const requestMessage = document.getElementById('requestMessage');
 
-let stack = []; // active profiles in stack order (0 = top)
+const subjects = [...new Set(tutors.map((tutor) => tutor.subject))].sort();
+const levels = [...new Set(tutors.map((tutor) => tutor.level))].sort();
 
-/* start UI */
-asMentorBtn.addEventListener('click', () => start('mentor'));
-asMenteeBtn.addEventListener('click', () => start('mentee'));
-backBtn.addEventListener('click', () => {
-  emptyState.classList.add('hidden');
-  roleWrap.classList.remove('hidden');
+subjects.forEach((subject) => {
+  subjectFilter.insertAdjacentHTML('beforeend', `<option value="${subject}">${subject}</option>`);
 });
 
-nopeBtn.addEventListener('click', () => programmaticSwipe(-1));
-likeBtn.addEventListener('click', () => programmaticSwipe(1));
+levels.forEach((level) => {
+  levelFilter.insertAdjacentHTML('beforeend', `<option value="${level}">${level}</option>`);
+});
 
-function start(which){
-  roleWrap.classList.add('hidden');
-  demoArea.classList.remove('hidden');
-  if (which === 'mentor') stack = [...demoMentees];
-  else stack = [...demoMentors];
-  renderStack();
-}
+function renderTutors() {
+  const selectedSubject = subjectFilter.value;
+  const selectedLevel = levelFilter.value;
 
-/* render current stack (top card first) */
-function renderStack(){
-  cardContainer.innerHTML = '';
-  if (!stack.length){
+  const filteredTutors = tutors.filter((tutor) => {
+    const subjectMatch = selectedSubject === 'all' || tutor.subject === selectedSubject;
+    const levelMatch = selectedLevel === 'all' || tutor.level === selectedLevel;
+    return subjectMatch && levelMatch;
+  });
+
+  if (!filteredTutors.length) {
+    tutorGrid.innerHTML = '';
     emptyState.classList.remove('hidden');
     return;
-  } else {
-    emptyState.classList.add('hidden');
   }
 
-  // Render from bottom to top so top card is last in DOM
-  for (let i = stack.length - 1; i >= 0; i--){
-    const p = stack[i];
-    const card = createCard(p, i);
-    // Slight scale/offset for deeper cards
-    const depth = stack.length - 1 - i;
-    card.style.transform = `translateY(${depth * 8}px) scale(${1 - depth * 0.02})`;
-    cardContainer.appendChild(card);
-  }
+  emptyState.classList.add('hidden');
+
+  tutorGrid.innerHTML = filteredTutors
+    .map(
+      (tutor) => `
+        <article class="tutor-card" data-id="${tutor.id}">
+          <h3>${tutor.name}</h3>
+          <p class="meta">${tutor.school} · ${tutor.level}</p>
+          <p><strong>Subject:</strong> ${tutor.subject}</p>
+          <p><strong>Rate:</strong> $${tutor.rate}/hour</p>
+          <p>${tutor.blurb}</p>
+          <button class="btn btn-small" data-book-name="${tutor.name}" type="button">Book ${tutor.name.split(' ')[0]}</button>
+        </article>
+      `
+    )
+    .join('');
 }
 
-/* create single card element with pointer handlers */
-function createCard(person, index){
-  const el = document.createElement('div');
-  el.className = 'card';
-  el.dataset.id = person.id;
-  el.innerHTML = `
-    <img src="${person.img}" alt="${escapeHtml(person.name)}">
-    <div class="info">
-      <div class="name">${escapeHtml(person.name)}</div>
-      <div class="role">${escapeHtml(person.role)}</div>
-    </div>
-  `;
+subjectFilter.addEventListener('change', renderTutors);
+levelFilter.addEventListener('change', renderTutors);
 
-  // pointer drag state (per card)
-  let startX = 0, startY = 0;
-  let currentX = 0, currentY = 0;
-  let dragging = false;
+browseTutorsBtn.addEventListener('click', () => {
+  marketplaceSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 
-  function onPointerDown(e){
-    e.preventDefault();
-    el.setPointerCapture(e.pointerId);
-    dragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
-    el.style.transition = 'none';
-  }
+becomeTutorBtn.addEventListener('click', () => {
+  requestSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+});
 
-  function onPointerMove(e){
-    if (!dragging) return;
-    currentX = e.clientX - startX;
-    currentY = e.clientY - startY;
-    const rot = currentX / 12;
-    el.style.transform = `translate(${currentX}px, ${currentY}px) rotate(${rot}deg)`;
-  }
+tutorGrid.addEventListener('click', (event) => {
+  const target = event.target;
+  if (!(target instanceof HTMLElement)) return;
 
-  function onPointerUp(e){
-    if (!dragging) return;
-    dragging = false;
-    el.releasePointerCapture(e.pointerId);
-    const threshold = 110;
-    if (Math.abs(currentX) > threshold){
-      // swipe away
-      const dir = currentX > 0 ? 1 : -1;
-      flyAwayAndRemove(el, dir);
-    } else {
-      // return to stack position
-      el.style.transition = 'transform 220ms ease';
-      el.style.transform = ''; // CSS initial transform (renderStack adds depth transforms; remove then re-render)
-      // small timeout to let transition finish then re-render stack so depths are correct
-      setTimeout(renderStack, 230);
-    }
-  }
+  const tutorName = target.dataset.bookName;
+  if (!tutorName) return;
 
-  el.addEventListener('pointerdown', onPointerDown);
-  el.addEventListener('pointermove', onPointerMove);
-  el.addEventListener('pointerup', onPointerUp);
-  el.addEventListener('pointercancel', onPointerUp);
-  el.addEventListener('lostpointercapture', onPointerUp);
+  requestSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  requestSubject.focus();
+  requestMessage.classList.remove('hidden');
+  requestMessage.textContent = `Great choice! Tell us what you want to learn with ${tutorName}.`;
+});
 
-  return el;
-}
+requestForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const studentName = studentNameInput.value.trim();
+  const subject = requestSubject.value.trim();
 
-/* animate card off-screen and remove from stack */
-function flyAwayAndRemove(el, dir){
-  // dir: 1 = right (like), -1 = left (nope)
-  el.style.transition = 'transform 350ms ease-out, opacity 350ms';
-  el.style.transform = `translate(${dir * 900}px, -120px) rotate(${dir * 30}deg)`;
-  el.style.opacity = '0';
-  // Remove underlying data after animation
-  setTimeout(() => {
-    const id = el.dataset.id;
-    stack = stack.filter(s => s.id !== id);
-    renderStack();
-    // (demo) show simple match-ish toast or console log when liked
-    if (dir === 1) console.log('Liked', id);
-    else console.log('Nope', id);
-  }, 360);
-}
+  requestMessage.classList.remove('hidden');
+  requestMessage.textContent = `Thanks, ${studentName}! Your request for ${subject} has been submitted. A student tutor will respond soon.`;
+  requestForm.reset();
+});
 
-/* programmatic swipe (from buttons) */
-function programmaticSwipe(dir){
-  const topCard = cardContainer.querySelector('.card:last-child'); // last added is top
-  if (!topCard) return;
-  flyAwayAndRemove(topCard, dir);
-}
+const studentNameInput = document.getElementById('studentName');
+const requestSubject = document.getElementById('requestSubject');
 
-/* small helper to escape HTML in injected strings */
-function escapeHtml(str){
-  return String(str)
-    .replaceAll('&','&amp;')
-    .replaceAll('<','&lt;')
-    .replaceAll('>','&gt;')
-    .replaceAll('"','&quot;')
-    .replaceAll("'",'&#39;');
-}
+renderTutors();
